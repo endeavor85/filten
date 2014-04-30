@@ -1,0 +1,63 @@
+.filten-wrapper {
+	display: none;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 150px;
+    border: 1px solid #204759;
+    background: #f3f3f3;
+    margin: 20px;
+    border-radius: 3px;
+}
+.filten-header {
+    text-align: center;
+    background: #204759;
+	padding: 4px;
+}
+.filten-title {
+	font-size: 1.3em;	
+    font-weight: bold;
+    background: #204759;
+    color: #fff;
+}
+.filten-summary {
+    background: #204759;
+    color: #fff;
+	font-style: italic;
+}
+.filten-summary-counts {
+    text-align: center;
+}
+.filten-crit {
+    border-top: 1px solid #fff;
+    border-bottom: 1px solid #ccc;
+    padding: 4px;
+}
+.filten-crit:first-child {
+    border-top: none;
+}
+.filten-crit:last-child {
+    border-bottom: none;
+}
+.filten-crit-header {
+    font-weight: bold;
+	font-size: 1.1em;
+    margin-bottom: 4px;
+}
+.filten-crit-value {
+    cursor: pointer;
+	margin: 2px 0;
+}
+div.filten-crit-value:hover {
+	background-color: #DFDFEA;
+}
+.filten-crit-value.filten-active {
+    font-weight: bold;
+    font-style: italic;
+}
+.filten-crit-value-checkbox {
+	/* display: none */
+}
+.filten-crit-value-count {
+	float: right;
+}
