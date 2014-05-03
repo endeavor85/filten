@@ -1,18 +1,13 @@
 .filten-wrapper {
 	display: none;
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 150px;
     border: 1px solid #204759;
     background: #f3f3f3;
-    margin: 20px;
     border-radius: 3px;
 }
 .filten-header {
     text-align: center;
     background: #204759;
-	padding: 4px;
+	padding: 0.4em;
 }
 .filten-title {
 	font-size: 1.3em;	
@@ -31,7 +26,13 @@
 .filten-crit {
     border-top: 1px solid #fff;
     border-bottom: 1px solid #ccc;
-    padding: 4px;
+    padding: 0.3em;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 }
 .filten-crit:first-child {
     border-top: none;
@@ -42,11 +43,12 @@
 .filten-crit-header {
     font-weight: bold;
 	font-size: 1.1em;
-    margin-bottom: 4px;
+    margin-bottom: 0.3em;
 }
 .filten-crit-value {
+	position: relative;
     cursor: pointer;
-	margin: 2px 0;
+	padding: 0.3em 0;
 }
 div.filten-crit-value:hover {
 	background-color: #DFDFEA;
@@ -56,8 +58,22 @@ div.filten-crit-value:hover {
     font-style: italic;
 }
 .filten-crit-value-checkbox {
+	display: inline-block;
+	width: 0.8em;
+	height: 0.8em;
+	border: 1px solid #204759;
+	border-radius: 2px;
+	vertical-align: baseline;
+	margin: 0 0.3em;
+}
+.filten-active .filten-crit-value-checkbox {
 	/* display: none */
+	background: #204759;
 }
 .filten-crit-value-count {
-	float: right;
+	position: absolute;
+	right: 0;
+}
+.filten-item-filtered {
+	display: none;
 }

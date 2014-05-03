@@ -5,13 +5,14 @@ else if(typeof ko == 'undefined')
 else
 $(function(){
 
-var ProductVM = function(productsSelector, filtenCriteriaOptions) {
+var FiltenVM = function(filtenCriteriaOptions) {
     var self = this;
 
-    self.products = [];
+    self.items = [];
     self.criteria = {};
 	
-	self.visibleCount = ko.observable(0);
+	self.itemCountDOM = $('.filten-item-count');
+	self.visibleCountDOM = $('.filten-visible-count');
 
 	// called when a criterion value is selected or deselected
     self.valueSelectionCB = function () {
@@ -30,30 +31,31 @@ var ProductVM = function(productsSelector, filtenCriteriaOptions) {
 
         // criteria results are INTERSECTED, criterion values are UNIONED
 
-        // determine which products are visible (start with all products, then INTERSECT filtered criteria)
-        var visibleProducts = self.products.slice();
+        // determine which items are visible (start with all items, then INTERSECT filtered criteria)
+        var visibleProducts = self.items.slice();
         $.each(activeCriteria, function (i, activeCriterion) {
             var criterionUnionedProducts = [];
             $.each(activeCriterion, function (i, activeValue) {
-                $.each(activeValue.products, function (j, product) {
+                $.each(activeValue.items, function (j, item) {
                     // add to union (OR)
-                    if (criterionUnionedProducts.indexOf(product) < 0) criterionUnionedProducts.push(product);
+                    if (criterionUnionedProducts.indexOf(item) < 0) criterionUnionedProducts.push(item);
                 });
             });
             // intersect with previous results (AND)
             var len = visibleProducts.length;
             while (len--) {
-                // if product didn't satisfy this criterion, remove it from list
+                // if item didn't satisfy this criterion, remove it from list
                 if (criterionUnionedProducts.indexOf(visibleProducts[len]) < 0) visibleProducts.splice(len, 1);
             }
         });
 
-        // update product visibility
-        $.each(self.products, function (j, product) {
-            product.visible(visibleProducts.indexOf(product) >= 0);
+        // update item visibility
+        $.each(self.items, function (j, item) {
+			item.setVisible(visibleProducts.indexOf(item) >= 0);
         });
 		
-		self.visibleCount(visibleProducts.length);
+		// update visible count
+		self.visibleCountDOM.text(visibleProducts.length);
     };
 
     // INITIALIZATION
@@ -61,19 +63,19 @@ var ProductVM = function(productsSelector, filtenCriteriaOptions) {
 	// load options (if present)
 	var options = filtenCriteriaOptions || {};
 	
-	// temporary structure to store criterion while parsing products
+	// temporary structure to store criterion while parsing items
 	var criteriaMap = {};
 
-    $(productsSelector).each(function (i, v) {
-        var product = new ProductModel(v);
-        self.products.push(product);
+    $('.filten-item').each(function (i, v) {
+        var item = new ProductModel(v);
+        self.items.push(item);
 		
-        $.each(product.criteria, function (criterionKey, rawValue) {
+        $.each(item.criteria, function (criterionKey, rawValue) {
 			// lookup existing criterion, or create if it doesn't exist yet
 			if(!criteriaMap[criterionKey])
 				criteriaMap[criterionKey] = new CriterionModel(criterionKey, options[criterionKey.toLowerCase()], self.valueSelectionCB);
-			// parse the product's rawValue for this criterion
-			criteriaMap[criterionKey].parseProduct(product, rawValue);
+			// parse the item's rawValue for this criterion
+			criteriaMap[criterionKey].parseProduct(item, rawValue);
         });
     });
 	
@@ -83,8 +85,10 @@ var ProductVM = function(productsSelector, filtenCriteriaOptions) {
 		criterion.finalize();
 		return criterion;
 	}).sort(function(a,b){return a.options.criteriaSortOrder - b.options.criteriaSortOrder;});
+		
+	self.itemCountDOM.text(self.items.length);
 	
-	self.visibleCount(self.products.length);
+	self.valueSelectionCB();
 };
 
 var CriterionModel = function (criterionName, options, valueSelectionCB) {
@@ -107,11 +111,14 @@ var CriterionModel = function (criterionName, options, valueSelectionCB) {
 		var B = (typeof b == "string") ? b.name.toUpperCase() : b.name;
 		return (A < B) ? -1 : (A > B) ? 1 : 0;
 	};
+	self.options.preProcess = self.options.preProcess || function(value) {
+		return value.trim();
+	}
 	if(typeof self.options.criteriaSortOrder === 'undefined')
 		self.options.criteriaSortOrder = 999;
 	self.options.displayName = self.options.displayName || criterionName;
 	
-	self.parseProduct = function(product, rawValue) {
+	self.parseProduct = function(item, rawValue) {
 		var values = [];
 		// if delimeter option is given, split each value into multiple values with the delimeter
 		if(self.options.delimeter)
@@ -119,16 +126,28 @@ var CriterionModel = function (criterionName, options, valueSelectionCB) {
 		else
 			values.push(rawValue);
 		
-		// associate product with each of its values for this criterion
+		// sanitize values and associate item with each of its values for this criterion
 		for(var i=-1; ++i<values.length;) {
 			var value = values[i];
-			if(!self.valueMap[value])
-				self.valueMap[value] = new CriterionValueModel(value, self.valueSelectionCB);
-			self.valueMap[value].addProduct(product);
+			
+			// remove HTML comments
+			if(typeof value == 'string')
+				value = value.replace(/<!--[\s\S]*?-->/g, "");
+			
+			// preprocess value
+			if(self.options.preProcess)
+				value = self.options.preProcess(value);
+				
+			// associate item with this criterion value (ignore empty string values)
+			if(typeof value != 'string' || value.length > 0) {
+				if(!self.valueMap[value]) 
+					self.valueMap[value] = new CriterionValueModel(value, self.valueSelectionCB, self.options.preProcess);
+				self.valueMap[value].addProduct(item);
+			}
 		}
 	};
 	
-	// called when all values/products have been added, perform any pre-render processing
+	// called when all values/items have been added, perform any pre-render processing
 	self.finalize = function() {
 		self.values = $.map(self.valueMap,function(value) {
 			return value;
@@ -149,7 +168,7 @@ var CriterionModel = function (criterionName, options, valueSelectionCB) {
 				var lowest = Math.floor(low / scale) * scale;
 				var highest = Math.ceil(high / scale) * scale;
 				
-				// create new set of values based on ranges, associating the old values' products with the new set of values(ranges)
+				// create new set of values based on ranges, associating the old values' items with the new set of values(ranges)
 				for(var i = lowest; i < highest; i = i+scale) {
 					var range = {lower:i, upper:i+scale};
 					var rangeValueModel = new CriterionValueModel(self.options.formatValue(range.lower) + " - " + self.options.formatValue(range.upper), self.valueSelectionCB);
@@ -157,26 +176,23 @@ var CriterionModel = function (criterionName, options, valueSelectionCB) {
 					rangeValueModel.range = range;
 					
 					// loop through unmatched singular values to determine if they fall within the current
-					// if so, add their products to that range's value model
+					// if so, add their items to that range's value model
 					var len = singularValues.length;
 					while(len--) {
 						var value = singularValues[len];
 						// lower < value <= upper
 						if(value > rangeValueModel.range.lower && value <= rangeValueModel.range.upper) {
-							// add the singular value's products to the current range value
-							for(var j=-1; ++j<self.valueMap[value].products.length;)
-								rangeValueModel.addProduct(self.valueMap[value].products[j]);
+							// add the singular value's items to the current range value
+							for(var j=-1; ++j<self.valueMap[value].items.length;)
+								rangeValueModel.addProduct(self.valueMap[value].items[j]);
 								
 							// remove this singular value since we've found it's match
 							singularValues.splice(len,1);
 						}
-						
-						//if(!self.valueMap[value])
-						//	self.valueMap[value] = new CriterionValueModel(value, self.valueSelectionCB);
-						//self.valueMap[value].addProduct(product);
 					};
 					
-					rangeValues.push(rangeValueModel);
+					if(rangeValueModel.items.length > 0)
+						rangeValues.push(rangeValueModel);
 					
 					self.values = rangeValues;
 				}
@@ -193,24 +209,17 @@ var CriterionModel = function (criterionName, options, valueSelectionCB) {
 
 var CriterionValueModel = function (valueName, valueSelectionCB) {
     var self = this;
-
+	
     self.name = valueName;
-    self.products = [];
+    self.items = [];
     self.active = ko.observable(false);
 
-    self.addProduct = function(product) {
-        self.products.push(product);
+    self.addProduct = function(item) {
+        self.items.push(item);
     };
 
-    self.count = function() {
-        return self.products.length;
-    };
-
-    self.countVisible = function() {
-        var count = 0;
-        for (var i = 0; i < self.products.length; i++)
-            if (self.products[i].visible()) count++;
-        return count;
+    self.itemCount = function() {
+        return self.items.length;
     };
 
     self.toggleActive = function() {
@@ -220,28 +229,34 @@ var CriterionValueModel = function (valueName, valueSelectionCB) {
     self.active.subscribe(valueSelectionCB);
 };
 
-var ProductModel = function (productDOM) {
+var ProductModel = function (itemDOM) {
     var self = this;
 
-    var $product = $(productDOM);
-    self.dom = $product;
-    self.visible = ko.observable(true);
+    var $item = $(itemDOM);
+    self.dom = $item;
 
     self.criteria = {};
     self.multifilters = {};
-    $.each($product.data(), function (k, v) {
+    $.each($item.data(), function (k, v) {
 		// .data() returns keys in camel case
-        if (/^filtenCrit/.test(k)) self.criteria[k.substring(10)] = v; // remove "filten-crit-" prefix
+        if (/^filten/.test(k)) self.criteria[k.substring(6)] = v; // remove "filten-" prefix
     });
 
-    self.visible.subscribe(function (newVisibility) {
-        if (newVisibility) self.dom.show();
-        else self.dom.hide();
-    });
+	self.setVisible = function(visible){
+        if(visible) self.dom.removeClass('filten-item-filtered');
+        else self.dom.addClass('filten-item-filtered');
+	};
 };
 
 var target = document.getElementById('filten');
-ko.applyBindings(new ProductVM('.filten-product', filtenCriteriaOptions), target);
-$(target).show();
+
+$('.filten').each(function(){
+	var $filten = $(this);
+	$filten.addClass("filten-wrapper");
+	$filten.append('<div class="filten-header"><div class="filten-title">Filter Results</div><div class="filten-summary"><div class="filten-summary-counts">showing <span class="filten-visible-count"></span> of <span class="filten-item-count"></span></div></div></div><div class="filten-container" data-bind="foreach: criteria"><div class="filten-crit"><div class="filten-crit-header" data-bind="text: options.displayName"></div><!-- ko foreach: values --><div class="filten-crit-value" data-bind="css: {\'filten-active\': active}, click: toggleActive"><div class="filten-crit-value-checkbox"></div><span data-bind="text: name"></span> <span class="filten-crit-value-count">(<span data-bind="text: itemCount()"></span>)</span></div><!-- /ko --></div></div>');
+	ko.applyBindings(new FiltenVM(filtenCriteriaOptions), this);
+	$filten.show();
+});
+
 
 });

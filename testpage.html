@@ -1,11 +1,19 @@
 <html>
 <head>
-<link href="filten.css" rel="stylesheet" type="text/css">
+<link href="filten.css" rel="stylesheet" type="text/css" />
 <style>
 body {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 12px;
     margin: 10px;
+}
+.filten-wrapper {
+    position: absolute;
+    left: 0;
+    top: 0;
+	width: 150px;
+    margin: 20px;
+    font-size: 12px;
 }
 .pa_products {
     margin-left: 165px;
@@ -45,64 +53,54 @@ body {
 </head>
 <body>
 <div class="content-wrapper">
-    <div id='filten' class="filten-wrapper">
-		<script language="javascript" type="text/javascript">
-			var filtenCriteriaOptions = {
-				price : {
-					formatValue : function(value) {return "$" + value;},
-					asRange : true,
-					criteriaSortOrder : 1
-				},
-				material : {
-					criteriaSortOrder : 2
-				},
-				categories : {
-					delimeter : "|"
+	<script language="javascript" type="text/javascript">
+		var filtenCriteriaOptions = {
+			price : {
+				formatValue : function(value) {return "$" + value},
+				asRange : true,
+				criteriaSortOrder : 1,
+				preProcess : function(value) {
+					if(typeof value == 'string')
+						return value.replace(/^\s*\$/, "").trim();
+					else
+						return value;
 				}
-			};
-		</script>
-        <div class="filten-header">
-			<div class="filten-title">Filter Results</div>
-			<div class="filten-summary">
-				<div class="filten-summary-counts">showing <span data-bind="text: visibleCount"></span> of <span data-bind="text: products.length"></span></div>
-			</div>
-		</div>
-        <div class='filten-crit-container' data-bind="foreach: criteria">
-            <div class='filten-crit'>
-                <div class='filten-crit-header' data-bind="text: options.displayName"></div>
-                <!-- ko foreach: values -->
-                <div class='filten-crit-value' data-bind="css: {'filten-active': active}, click: toggleActive"><input class="filten-crit-value-checkbox" type="checkbox" data-bind="checked: active" /><span data-bind="text: name"></span> <span class="filten-crit-value-count">(<span data-bind="text: count(), attr: {'data-visible-count': countVisible()}"></span>)</span></div>
-                <!-- /ko -->
-            </div>
-        </div>
-    </div>
-    <div id="filten-meta" style="display: none;"></div>
+			},
+			material : {
+				criteriaSortOrder : 2
+			},
+			categories : {
+				delimeter : "|"
+			}
+		};
+	</script>
+    <div class="filten"></div>
 	<div class="pa_products">
-		<div class="pa_product filten-product" data-filten-crit-price="22" data-filten-crit-material="Glass Ball" data-filten-crit-categories="Dogs|Girl|Dogs"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/BFCO118.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/newlywed-ornament-BFCO118.html">Newlywed Snow Couple Snowflake</a></div><br/><div><b>Price:</b> $22</div><div><b>Material:</b> Glass Ball</div><div><b>Categories:</b> Dogs|Girl|Dogs</div></div>
-		<div class="pa_product filten-product" data-filten-crit-price="23" data-filten-crit-material="Blown Glass" data-filten-crit-categories="Yellow Snow|Santa|Cats"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/BFCO143.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/newlywed-ornament-BFCO143.html">There's No Snowman Like My Snowman</a></div><br/><div><b>Price:</b> $23</div><div><b>Material:</b> Blown Glass</div><div><b>Categories:</b> Yellow Snow|Santa|Cats</div></div>
-		<div class="pa_product filten-product" data-filten-crit-price="24" data-filten-crit-material="Blown Glass" data-filten-crit-categories="Girl|Parents|Dogs"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/OR800P.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/family-ornament-1024.html">Glass Ball Snow Family of 4</a></div><br/><div><b>Price:</b> $24</div><div><b>Material:</b> Blown Glass</div><div><b>Categories:</b> Girl|Parents|Dogs</div></div>
-		<div class="pa_product filten-product" data-filten-crit-price="24" data-filten-crit-material="Glass Ball" data-filten-crit-categories="Cats|Cats|Dogs"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/D7114AP.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/family-ornament-D7114A.html">4 Grandkids Fun in the Snow</a></div><br/><div><b>Price:</b> $24</div><div><b>Material:</b> Glass Ball</div><div><b>Categories:</b> Cats|Cats|Dogs</div></div>
-		<div class="pa_product filten-product" data-filten-crit-price="22" data-filten-crit-material="Resin" data-filten-crit-categories="Santa|Boy|Yellow Snow"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/OR801P.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/family-ornament-1025.html">Glass Ball Snowman Family of 5</a></div><br/><div><b>Price:</b> $22</div><div><b>Material:</b> Resin</div><div><b>Categories:</b> Santa|Boy|Yellow Snow</div></div>
-		<div class="pa_product filten-product" data-filten-crit-price="12" data-filten-crit-material="Glass Ball" data-filten-crit-categories="Snowman|Parents|Yellow Snow"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/CAL516P.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/expecting-ornament-CAL516.html">Pregnant Snowlady</a></div><br/><div><b>Price:</b> $12</div><div><b>Material:</b> Glass Ball</div><div><b>Categories:</b> Snowman|Parents|Yellow Snow</div></div>
-		<div class="pa_product filten-product" data-filten-crit-price="13" data-filten-crit-material="Polymer Clay" data-filten-crit-categories="Hearts|Yellow Snow|Parents"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/DEL308P.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/first-ornament-DEL308.html">Snow Family for 3</a></div><br/><div><b>Price:</b> $13</div><div><b>Material:</b> Polymer Clay</div><div><b>Categories:</b> Hearts|Yellow Snow|Parents</div></div>
-		<div class="pa_product filten-product" data-filten-crit-price="8" data-filten-crit-material="Blown Glass" data-filten-crit-categories="Reindeer|Tigers|Santa"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/DY500P.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/family-ornament-DY103.html">Snow Family for 5</a></div><br/><div><b>Price:</b> $8</div><div><b>Material:</b> Blown Glass</div><div><b>Categories:</b> Reindeer|Tigers|Santa</div></div>
-		<div class="pa_product filten-product" data-filten-crit-price="17" data-filten-crit-material="Resin" data-filten-crit-categories="Snowman|Santa|Dogs"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/OC106P.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/first-ornament-OC106.html">Baby at Christmastime Blue Snowflake</a></div><br/><div><b>Price:</b> $17</div><div><b>Material:</b> Resin</div><div><b>Categories:</b> Snowman|Santa|Dogs</div></div>
-		<div class="pa_product filten-product" data-filten-crit-price="12" data-filten-crit-material="Glass Ball" data-filten-crit-categories="Santa|Cats|Parents"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/OC107P.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/first-ornament-OC107.html">Baby at Christmastime Snowflake Pink</a></div><br/><div><b>Price:</b> $12</div><div><b>Material:</b> Glass Ball</div><div><b>Categories:</b> Santa|Cats|Parents</div></div>
-		<div class="pa_product filten-product" data-filten-crit-price="13" data-filten-crit-material="Blown Glass" data-filten-crit-categories="Reindeer|Hearts|Hearts"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/OR1601P.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/first-ornament-OR1601.html">Snow Couple with Baby Girl</a></div><br/><div><b>Price:</b> $13</div><div><b>Material:</b> Blown Glass</div><div><b>Categories:</b> Reindeer|Hearts|Hearts</div></div>
-		<div class="pa_product filten-product" data-filten-crit-price="12" data-filten-crit-material="Resin" data-filten-crit-categories="Cats|Hearts|Yellow Snow"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/RUD1052P.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/first-ornament-RUD1052.html">Snow Family with Tree for 4</a></div><br/><div><b>Price:</b> $12</div><div><b>Material:</b> Resin</div><div><b>Categories:</b> Cats|Hearts|Yellow Snow</div></div>
-		<div class="pa_product filten-product" data-filten-crit-price="15" data-filten-crit-material="Glass Ball" data-filten-crit-categories="Santa|Girl|Reindeer"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/BFCO103.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/newlywed-ornament-BFCO103.html">Snowful Fun</a></div><br/><div><b>Price:</b> $15</div><div><b>Material:</b> Glass Ball</div><div><b>Categories:</b> Santa|Girl|Reindeer</div></div>
-		<div class="pa_product filten-product" data-filten-crit-price="19" data-filten-crit-material="Blown Glass" data-filten-crit-categories="Santa|Snowman|Tigers"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/BFCO151.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/newlywed-ornament-BFCO151.html">Our First Christmas - Snow Couple</a></div><br/><div><b>Price:</b> $19</div><div><b>Material:</b> Blown Glass</div><div><b>Categories:</b> Santa|Snowman|Tigers</div></div>
-		<div class="pa_product filten-product" data-filten-crit-price="13" data-filten-crit-material="Polymer Clay" data-filten-crit-categories="Hearts|Boy|Snowman"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/BFCO112.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/newlywed-ornament-BFCO112.html">Newlyweds: Top Hat Snow Couple</a></div><br/><div><b>Price:</b> $13</div><div><b>Material:</b> Polymer Clay</div><div><b>Categories:</b> Hearts|Boy|Snowman</div></div>
-		<div class="pa_product filten-product" data-filten-crit-price="9" data-filten-crit-material="Polymer Clay" data-filten-crit-categories="Reindeer|Tigers|Reindeer"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/BFCO119.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/newlywed-ornament-BFCO119.html">Newlywed Snow Couple on Heart</a></div><br/><div><b>Price:</b> $9</div><div><b>Material:</b> Polymer Clay</div><div><b>Categories:</b> Reindeer|Tigers|Reindeer</div></div>
-		<div class="pa_product filten-product" data-filten-crit-price="13" data-filten-crit-material="Glass Ball" data-filten-crit-categories="Hearts|Cats|Boy"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/BFCO121.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/newlywed-ornament-BFCO121.html">Newlywed Snow Couple In Love</a></div><br/><div><b>Price:</b> $13</div><div><b>Material:</b> Glass Ball</div><div><b>Categories:</b> Hearts|Cats|Boy</div></div>
-		<div class="pa_product filten-product" data-filten-crit-price="12" data-filten-crit-material="Polymer Clay" data-filten-crit-categories="Parents|Cats|Boy"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/BFCO122.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/newlywed-ornament-BFCO122.html">Newlywed Snow Couple with Tree</a></div><br/><div><b>Price:</b> $12</div><div><b>Material:</b> Polymer Clay</div><div><b>Categories:</b> Parents|Cats|Boy</div></div>
-		<div class="pa_product filten-product" data-filten-crit-price="10" data-filten-crit-material="Polymer Clay" data-filten-crit-categories="Snowman|Santa|Cats"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/BFCOGIFTG972D3-PBFCOD.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/baby-ornament-ROPLR972D3.html">Snow Kids Sledding 3 Grandkids</a></div><br/><div><b>Price:</b> $10</div><div><b>Material:</b> Polymer Clay</div><div><b>Categories:</b> Snowman|Santa|Cats</div></div>
-		<div class="pa_product filten-product" data-filten-crit-price="9" data-filten-crit-material="Glass Ball" data-filten-crit-categories="Girl|Snowman|Snowman"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/BFCOGIFTGTT8122A-PBFCOD.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/baby-ornament-ROPLRTT8122A.html">Snow Grandma 2 Grandkids Tabletop Decoration</a></div><br/><div><b>Price:</b> $9</div><div><b>Material:</b> Glass Ball</div><div><b>Categories:</b> Girl|Snowman|Snowman</div></div>
-		<div class="pa_product filten-product" data-filten-crit-price="25" data-filten-crit-material="Polymer Clay" data-filten-crit-categories="Yellow Snow|Hearts|Girl"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/BFCOOC0153A-PBFCOD.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/baby-ornament-ROCENT0153A.html">Snow Family First Christmas Together</a></div><br/><div><b>Price:</b> $25</div><div><b>Material:</b> Polymer Clay</div><div><b>Categories:</b> Yellow Snow|Hearts|Girl</div></div>
+		<div class="pa_product filten-item" data-filten-price="22" data-filten-material="Glass Ball" data-filten-categories="Dogs|Girl|Dogs"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/BFCO118.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/newlywed-ornament-BFCO118.html">Newlywed Snow Couple Snowflake</a></div><br/><div><b>Price:</b> $22</div><div><b>Material:</b> Glass Ball</div><div><b>Categories:</b> Dogs|Girl|Dogs</div></div>
+		<div class="pa_product filten-item" data-filten-price="23" data-filten-material="Blown Glass" data-filten-categories="Yellow Snow|Santa|Cats"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/BFCO143.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/newlywed-ornament-BFCO143.html">There's No Snowman Like My Snowman</a></div><br/><div><b>Price:</b> $23</div><div><b>Material:</b> Blown Glass</div><div><b>Categories:</b> Yellow Snow|Santa|Cats</div></div>
+		<div class="pa_product filten-item" data-filten-price="24" data-filten-material="Blown Glass" data-filten-categories="Girl|Parents|Dogs"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/OR800P.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/family-ornament-1024.html">Glass Ball Snow Family of 4</a></div><br/><div><b>Price:</b> $24</div><div><b>Material:</b> Blown Glass</div><div><b>Categories:</b> Girl|Parents|Dogs</div></div>
+		<div class="pa_product filten-item" data-filten-price="24" data-filten-material="Glass Ball" data-filten-categories="Cats|Cats|Dogs"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/D7114AP.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/family-ornament-D7114A.html">4 Grandkids Fun in the Snow</a></div><br/><div><b>Price:</b> $24</div><div><b>Material:</b> Glass Ball</div><div><b>Categories:</b> Cats|Cats|Dogs</div></div>
+		<div class="pa_product filten-item" data-filten-price="22" data-filten-material="Resin" data-filten-categories="Santa|Boy|Yellow Snow"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/OR801P.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/family-ornament-1025.html">Glass Ball Snowman Family of 5</a></div><br/><div><b>Price:</b> $22</div><div><b>Material:</b> Resin</div><div><b>Categories:</b> Santa|Boy|Yellow Snow</div></div>
+		<div class="pa_product filten-item" data-filten-price="12" data-filten-material="Glass Ball" data-filten-categories="Snowman|Parents|Yellow Snow"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/CAL516P.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/expecting-ornament-CAL516.html">Pregnant Snowlady</a></div><br/><div><b>Price:</b> $12</div><div><b>Material:</b> Glass Ball</div><div><b>Categories:</b> Snowman|Parents|Yellow Snow</div></div>
+		<div class="pa_product filten-item" data-filten-price="$13" data-filten-material="Polymer Clay" data-filten-categories="Hearts|Yellow Snow|Parents"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/DEL308P.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/first-ornament-DEL308.html">Snow Family for 3</a></div><br/><div><b>Price:</b> $13</div><div><b>Material:</b> Polymer Clay</div><div><b>Categories:</b> Hearts|Yellow Snow|Parents</div></div>
+		<div class="pa_product filten-item" data-filten-price="8" data-filten-material="Blown Glass" data-filten-categories="Reindeer|Tigers|Santa"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/DY500P.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/family-ornament-DY103.html">Snow Family for 5</a></div><br/><div><b>Price:</b> $8</div><div><b>Material:</b> Blown Glass</div><div><b>Categories:</b> Reindeer|Tigers|Santa</div></div>
+		<div class="pa_product filten-item" data-filten-price="17" data-filten-material="Resin" data-filten-categories="Snowman|Santa|Dogs"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/OC106P.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/first-ornament-OC106.html">Baby at Christmastime Blue Snowflake</a></div><br/><div><b>Price:</b> $17</div><div><b>Material:</b> Resin</div><div><b>Categories:</b> Snowman|Santa|Dogs</div></div>
+		<div class="pa_product filten-item" data-filten-price="$ 12" data-filten-material="Glass Ball" data-filten-categories="Santa|Cats|Parents"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/OC107P.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/first-ornament-OC107.html">Baby at Christmastime Snowflake Pink</a></div><br/><div><b>Price:</b> $12</div><div><b>Material:</b> Glass Ball</div><div><b>Categories:</b> Santa|Cats|Parents</div></div>
+		<div class="pa_product filten-item" data-filten-price="13" data-filten-material="Blown Glass" data-filten-categories="Reindeer|Hearts|Hearts"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/OR1601P.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/first-ornament-OR1601.html">Snow Couple with Baby Girl</a></div><br/><div><b>Price:</b> $13</div><div><b>Material:</b> Blown Glass</div><div><b>Categories:</b> Reindeer|Hearts|Hearts</div></div>
+		<div class="pa_product filten-item" data-filten-price="12" data-filten-material="Resin" data-filten-categories="Cats|Hearts|Yellow Snow"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/RUD1052P.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/first-ornament-RUD1052.html">Snow Family with Tree for 4</a></div><br/><div><b>Price:</b> $12</div><div><b>Material:</b> Resin</div><div><b>Categories:</b> Cats|Hearts|Yellow Snow</div></div>
+		<div class="pa_product filten-item" data-filten-price="15" data-filten-material="<!-- hidden Glass Ball -->" data-filten-categories="Santa|Girl|Reindeer"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/BFCO103.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/newlywed-ornament-BFCO103.html">Snowful Fun</a></div><br/><div><b>Price:</b> $15</div><div><b>Material:</b> Glass Ball</div><div><b>Categories:</b> Santa|Girl|Reindeer</div></div>
+		<div class="pa_product filten-item" data-filten-price=" 19" data-filten-material="Blown Glass" data-filten-categories="Santa|Snowman|Tigers"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/BFCO151.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/newlywed-ornament-BFCO151.html">Our First Christmas - Snow Couple</a></div><br/><div><b>Price:</b> $19</div><div><b>Material:</b> Blown Glass</div><div><b>Categories:</b> Santa|Snowman|Tigers</div></div>
+		<div class="pa_product filten-item" data-filten-price="13" data-filten-material="Polymer Clay" data-filten-categories="Hearts|Boy|Snowman"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/BFCO112.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/newlywed-ornament-BFCO112.html">Newlyweds: Top Hat Snow Couple</a></div><br/><div><b>Price:</b> $13</div><div><b>Material:</b> Polymer Clay</div><div><b>Categories:</b> Hearts|Boy|Snowman</div></div>
+		<div class="pa_product filten-item" data-filten-price="9" data-filten-material="Polymer Clay" data-filten-categories="Reindeer|Tigers|Reindeer"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/BFCO119.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/newlywed-ornament-BFCO119.html">Newlywed Snow Couple on Heart</a></div><br/><div><b>Price:</b> $9</div><div><b>Material:</b> Polymer Clay</div><div><b>Categories:</b> Reindeer|Tigers|Reindeer</div></div>
+		<div class="pa_product filten-item" data-filten-price="13  " data-filten-material="Resin  <!-- hidden Glass Ball -->" data-filten-categories="Hearts|Cats|Boy"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/BFCO121.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/newlywed-ornament-BFCO121.html">Newlywed Snow Couple In Love</a></div><br/><div><b>Price:</b> $13</div><div><b>Material:</b> Glass Ball</div><div><b>Categories:</b> Hearts|Cats|Boy</div></div>
+		<div class="pa_product filten-item" data-filten-price=" $12 " data-filten-material="Polymer Clay" data-filten-categories="Parents|Cats|Boy"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/BFCO122.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/newlywed-ornament-BFCO122.html">Newlywed Snow Couple with Tree</a></div><br/><div><b>Price:</b> $12</div><div><b>Material:</b> Polymer Clay</div><div><b>Categories:</b> Parents|Cats|Boy</div></div>
+		<div class="pa_product filten-item" data-filten-price="10" data-filten-material="Polymer Clay" data-filten-categories="Snowman|Santa|Cats"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/BFCOGIFTG972D3-PBFCOD.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/baby-ornament-ROPLR972D3.html">Snow Kids Sledding 3 Grandkids</a></div><br/><div><b>Price:</b> $10</div><div><b>Material:</b> Polymer Clay</div><div><b>Categories:</b> Snowman|Santa|Cats</div></div>
+		<div class="pa_product filten-item" data-filten-price="9" data-filten-material="Glass Ball" data-filten-categories="Girl|Snowman|Snowman"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/BFCOGIFTGTT8122A-PBFCOD.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/baby-ornament-ROPLRTT8122A.html">Snow Grandma 2 Grandkids Tabletop Decoration</a></div><br/><div><b>Price:</b> $9</div><div><b>Material:</b> Glass Ball</div><div><b>Categories:</b> Girl|Snowman|Snowman</div></div>
+		<div class="pa_product filten-item" data-filten-price="25" data-filten-material="Polymer Clay" data-filten-categories="Yellow Snow|Hearts|Girl"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/BFCOOC0153A-PBFCOD.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/baby-ornament-ROCENT0153A.html">Snow Family First Christmas Together</a></div><br/><div><b>Price:</b> $25</div><div><b>Material:</b> Polymer Clay</div><div><b>Categories:</b> Yellow Snow|Hearts|Girl</div></div>
     </div>
 </div>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/knockout/3.1.0/knockout-min.js"></script>
-<script src="filten.js" defer></script>
+<script src="filten.js"></script>
 </body>
 </html>
