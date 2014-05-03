@@ -215,7 +215,8 @@ var CriterionValueModel = function (valueName, valueSelectionCB) {
     self.active = ko.observable(false);
 
     self.addProduct = function(item) {
-        self.items.push(item);
+		if(self.items.indexOf(item) < 0)
+			self.items.push(item);
     };
 
     self.itemCount = function() {
