@@ -77,3 +77,16 @@ div.filten-crit-value:hover {
 .filten-item-filtered {
 	display: none;
 }
+.filten-footer {
+    text-align: center;
+    background: #204759;
+	padding: 0.4em;
+}
+.filten-brand {
+	font-size: 1em;
+    background: #204759;
+    color: #fff;
+}
+.filten-brand a {
+    color: #fff;
+}
