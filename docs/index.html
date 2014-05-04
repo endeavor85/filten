@@ -89,10 +89,10 @@ FiltEn requires the following javascript libraries:
 <h3>
 <a name="advanced-options" class="anchor" href="#advanced-options"><span class="octicon octicon-link"></span></a>Advanced Options</h3>
 
-<p>Some criteria may require more than just a name/value pair to achieve the desired effect.  To specify additional options for specific criteria, create a javascript variable named ‘filtenCriteriaOptions’ within <code>&lt;script&gt;</code> tags in the search results template.  The variable must be an <a href="http://www.quirksmode.org/js/associative.html">associative array</a> whose keys correspond to the names (lowercase) of the criteria found in the item metadata.  The value for each criteria name key is another object containing any of the following available options:</p>
+<p>Some criteria may require more than just a name/value pair to achieve the desired effect.  To specify additional options for specific criteria, set the <code>filten.options</code> varialbe within <code>&lt;script&gt;</code> tags below the <code>filten.min.js</code> inclusion.  The variable must be an <a href="http://www.quirksmode.org/js/associative.html">associative array</a> whose keys correspond to the names (lowercase) of the criteria found in the item metadata.  The value for each criteria name key is another object containing any of the following available options:</p>
 
 <pre><code>&lt;script language="javascript" type="text/javascript"&gt;
-  var filtenCriteriaOptions = {
+  filten.options = {
     // specify additional criteria options here
   };
 &lt;/script&gt;
@@ -144,7 +144,7 @@ The script comes with a default style template in the form of a CSS file.  Modif
 <p>The relevant CSS classes are identified here:</p>
 
 <ul>
-  <li><code>.filten-wrapper</code></li>
+  <li><code>.filten</code></li>
   <li><code>.filten-header</code></li>
   <li><code>.filten-title</code></li>
   <li><code>.filten-summary</code></li>
@@ -155,6 +155,7 @@ The script comes with a default style template in the form of a CSS file.  Modif
   <li><code>.filten-crit-value.filten-active</code></li>
   <li><code>.filten-crit-value-checkbox</code></li>
   <li><code>.filten-crit-value-count</code></li>
+  <li><code>.filten-item-filtered</code></li>
 </ul>
 
 <h3>
