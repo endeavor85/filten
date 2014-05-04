@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="FiltEn : search filter enhacement" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>FiltEn</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <!--<a id="forkme_banner" href="https://github.com/endeavor85/filten-docs">View on GitHub</a>-->
+
+          <h1 id="project_title">FiltEn</h1>
+          <h2 id="project_tagline">search filter enhacement</h2>
+
+          <!--
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/endeavor85/filten-docs/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/endeavor85/filten-docs/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+          -->
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+<h3>
+<a name="requirements" class="anchor" href="#requirements"><span class="octicon octicon-link"></span></a>Requirements</h3>
+
+<p>Since the script scans all the results on the page, pagination must be disabled.  Otherwise the filters would only reflect the items on the current page of the pager and would not be a correct reflection of the products.</p>
+
+<p>Since the script hides filtered results, results should be laid out in a responsive manner.  Tabular layouts do not work well because each product is “locked” into its original row and column.  As products are hidden, the remaining products do not shift to fill in the gaps.  A responsive layout is more conducive to this approach because it can react to changes in product visibility due to filtering.</p>
+
+<h3>
+<a name="dependencies" class="anchor" href="#dependencies"><span class="octicon octicon-link"></span></a>Dependencies</h3>
+
+FiltEn requires the following javascript libraries:
+
+<ul>
+<li>jQuery</li>
+<li>KnockoutJS</li>
+</ul>
+
+<h3>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h3>
+
+<h4>JavaScript Libraries</h4>
+
+<p>Include the following javascript libraries:</p>
+
+<pre><code>&lt;script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"&gt;&lt;/script&gt;
+&lt;script src="http://cdnjs.cloudflare.com/ajax/libs/knockout/3.1.0/knockout-min.js"&gt;&lt;/script&gt;
+&lt;script src="filten.js" defer&gt;&lt;/script&gt;
+</code></pre>
+
+<h4>Stylesheet</h4>
+
+<p>Include the following stylesheets:</p>
+
+<pre><code>&lt;link href="filten.css" rel="stylesheet" type="text/css" /&gt;
+</code></pre>
+
+<h4>Result Page HTML</h4>
+
+<p>Insert the following HTML into the product search result page:</p>
+
+<pre><code>&lt;div id='filten' class="filten-wrapper"&gt;
+    &lt;script language="javascript" type="text/javascript"&gt;
+        var filtenCriteriaOptions = {
+            // specify additional criteria options here
+        };
+    &lt;/script&gt;
+    &lt;div class="filten-header"&gt;
+        &lt;div class="filten-title"&gt;Filter Results&lt;/div&gt;
+        &lt;div class="filten-summary"&gt;
+            &lt;div class="filten-summary-counts"&gt;showing &lt;span data-bind="text: visibleCount"&gt;&lt;/span&gt; of &lt;span data-bind="text: products.length"&gt;&lt;/span&gt;&lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class='filten-crit-container' data-bind="foreach: criteria"&gt;
+        &lt;div class='filten-crit'&gt;
+            &lt;div class='filten-crit-header' data-bind="text: options.displayName"&gt;&lt;/div&gt;
+            &lt;!-- ko foreach: values --&gt;
+            &lt;div class='filten-crit-value' data-bind="css: {'filten-active': active}, click: toggleActive"&gt;&lt;input class="filten-crit-value-checkbox" type="checkbox" data-bind="checked: active" /&gt;&lt;span data-bind="text: name"&gt;&lt;/span&gt; &lt;span class="filten-crit-value-count"&gt;(&lt;span data-bind="text: count(), attr: {'data-visible-count': countVisible()}"&gt;&lt;/span&gt;)&lt;/span&gt;&lt;/div&gt;
+            &lt;!-- /ko --&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+
+<h4>Product Metadata</h4>
+
+<p>Add the class “filten-product” to each product’s containing HTML element.  In the same element, add the following attributes to specify search criteria values for the product:</p>
+
+<code>data-filten-crit-CRITERIA=”VALUE”</code>
+
+<p>Replace <code>CRITERIA</code> with the criteria name and <code>VALUE</code> with the product's value for that criteria.  You may have as many of these as you require.  Not all products have to have every criteria, so it’s ok to omit the attribute for those products.  Use the <code>preProcess</code> option to sanitize value prior to using them as search criteria.  <code>&lt;!-- HTML comments --&gt;</code> and trailing/leading whitespaces are automatically removed from string values.</p>
+
+<h3>
+<a name="advanced-options" class="anchor" href="#advanced-options"><span class="octicon octicon-link"></span></a>Advanced Options</h3>
+
+<p>Some criteria may require more than just a name/value pair to achieve the desired effect.  To specify additional options for specific criteria, create a javascript variable named ‘filtenCriteriaOptions’ within <code>&lt;script&gt;</code> tags in the search results template.  The variable must be an <a href="http://www.quirksmode.org/js/associative.html">associative array</a> whose keys correspond to the names (lowercase) of the criteria found in the product metadata.  The value for each criteria name key is another object containing any of the following available options:</p>
+
+<ul>
+<li><code>displayName</code> : string</li>
+<li><code>preProcess</code> : function(value) => obj (runs after delimeter)</li>
+<li><code>formatValue</code> : function(value) => string</li>
+<li><code>asRange</code> : true | false</li>
+<li><code>valueSort</code> : function(a,b) => number ( return < 0 => a before b, return =  0 => equal, return > 1 => b before a)</li>
+<li><code>delimeter</code> : character</li>
+<li><code>criteriaSortOrder</code> : number (it’s ok to skip numbers – the lower this number, the earlier it will appear in the list)</li>
+</ul>
+
+<p>Example:</p>
+
+<pre><code>var filtenCriteriaOptions = {
+    dollaramount : {
+        formatValue : function(value) {return "$" + value;},
+        displayName : "Price",
+        asRange : true,
+        criteriaSortOrder : 1,
+        preProcess : function(value) {
+          if(typeof value == 'string')
+            return value.replace(/^\s*\$/, "").trim();
+          else
+            return value;
+        }
+    },
+    categories : {
+        delimeter : ",",
+        valueSort : function(a,b){return b-a;} 
+    },
+    weight : {
+        formatValue : function(value) {return value + “ lbs”;},
+        valueSort : function(a,b){return b-a;} 
+    }
+};
+</code></pre>
+
+<h3>
+<a name="styles" class="anchor" href="#styles"><span class="octicon octicon-link"></span></a>Styles</h3>
+
+<p>
+The script comes with a default style template in the form of a CSS file.  Modifying the style of the ‘Filter Results’ box simply requires overriding the default styles with your own custom CSS.  Modifying the default template is not necessary.  Rather, custom styles can be added to your website’s existing CSS which will override the provided default styles.
+</p>
+
+<p>The relevant CSS classes are identified here:</p>
+
+<ul>
+  <li><code>.filten-wrapper</code></li>
+  <li><code>.filten-header</code></li>
+  <li><code>.filten-title</code></li>
+  <li><code>.filten-summary</code></li>
+  <li><code>.filten-summary-counts</code></li>
+  <li><code>.filten-crit</code></li>
+  <li><code>.filten-crit-header</code></li>
+  <li><code>.filten-crit-value</code></li>
+  <li><code>.filten-crit-value.filten-active</code></li>
+  <li><code>.filten-crit-value-checkbox</code></li>
+  <li><code>.filten-crit-value-count</code></li>
+</ul>
+
+<h3>
+<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
+
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">FiltEn maintained by <a href="https://github.com/endeavor85">endeavor85</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
