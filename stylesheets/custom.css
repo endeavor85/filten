@@ -1,0 +1,9 @@
+.left_side_img {
+    float: left;
+    margin-left: -180px;
+}
+
+.left_side_img img {
+    border: 0;
+    box-shadow: none;
+}
