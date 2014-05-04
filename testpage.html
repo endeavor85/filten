@@ -7,7 +7,7 @@ body {
     font-size: 12px;
     margin: 10px;
 }
-.filten-wrapper {
+.filten {
     position: absolute;
     left: 0;
     top: 0;
@@ -53,27 +53,6 @@ body {
 </head>
 <body>
 <div class="content-wrapper">
-	<script language="javascript" type="text/javascript">
-		var filtenCriteriaOptions = {
-			price : {
-				formatValue : function(value) {return "$" + value},
-				asRange : true,
-				criteriaSortOrder : 1,
-				preProcess : function(value) {
-					if(typeof value == 'string')
-						return value.replace(/^\s*\$/, "").trim();
-					else
-						return value;
-				}
-			},
-			material : {
-				criteriaSortOrder : 2
-			},
-			categories : {
-				delimeter : "|"
-			}
-		};
-	</script>
     <div class="filten"></div>
 	<div class="pa_products">
 		<div class="pa_product filten-item" data-filten-price="22" data-filten-material="Glass Ball" data-filten-categories="Dogs|Girl|Dogs"><img src="http://www.babysfirstchristmasornament.com/media/ss_size1/BFCO118.jpg"><br><div class="thumbh"><a href="http://www.babysfirstchristmasornament.com/newlywed-ornament-BFCO118.html">Newlywed Snow Couple Snowflake</a></div><br/><div><b>Price:</b> $22</div><div><b>Material:</b> Glass Ball</div><div><b>Categories:</b> Dogs|Girl|Dogs</div></div>
@@ -102,5 +81,26 @@ body {
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/knockout/3.1.0/knockout-min.js"></script>
 <script src="filten.js"></script>
+<script language="javascript" type="text/javascript">
+	filten.options = {
+		price : {
+			formatValue : function(value) {return "$" + value},
+			asRange : true,
+			criteriaSortOrder : 1,
+			preProcess : function(value) {
+				if(typeof value == 'string')
+					return value.replace(/^\s*\$/, "").trim();
+				else
+					return value;
+			}
+		},
+		material : {
+			criteriaSortOrder : 2
+		},
+		categories : {
+			delimeter : "|"
+		}
+	};
+</script>
 </body>
 </html>

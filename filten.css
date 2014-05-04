@@ -1,4 +1,4 @@
-.filten-wrapper {
+.filten {
 	display: none;
     border: 1px solid #204759;
     background: #f3f3f3;
@@ -87,6 +87,6 @@ div.filten-crit-value:hover {
     background: #204759;
     color: #fff;
 }
-.filten-wrapper div.filten-brand a {
+.filten div.filten-brand a {
     color: #fff;
 }
