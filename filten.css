@@ -87,6 +87,6 @@ div.filten-crit-value:hover {
     background: #204759;
     color: #fff;
 }
-.filten-brand a {
+.filten-wrapper div.filten-brand a {
     color: #fff;
 }

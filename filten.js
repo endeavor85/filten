@@ -32,30 +32,30 @@ var FiltenVM = function(filtenCriteriaOptions) {
         // criteria results are INTERSECTED, criterion values are UNIONED
 
         // determine which items are visible (start with all items, then INTERSECT filtered criteria)
-        var visibleProducts = self.items.slice();
+        var visibleItems = self.items.slice();
         $.each(activeCriteria, function (i, activeCriterion) {
-            var criterionUnionedProducts = [];
+            var criterionUnionedItems = [];
             $.each(activeCriterion, function (i, activeValue) {
                 $.each(activeValue.items, function (j, item) {
                     // add to union (OR)
-                    if (criterionUnionedProducts.indexOf(item) < 0) criterionUnionedProducts.push(item);
+                    if (criterionUnionedItems.indexOf(item) < 0) criterionUnionedItems.push(item);
                 });
             });
             // intersect with previous results (AND)
-            var len = visibleProducts.length;
+            var len = visibleItems.length;
             while (len--) {
                 // if item didn't satisfy this criterion, remove it from list
-                if (criterionUnionedProducts.indexOf(visibleProducts[len]) < 0) visibleProducts.splice(len, 1);
+                if (criterionUnionedItems.indexOf(visibleItems[len]) < 0) visibleItems.splice(len, 1);
             }
         });
 
         // update item visibility
         $.each(self.items, function (j, item) {
-			item.setVisible(visibleProducts.indexOf(item) >= 0);
+			item.setVisible(visibleItems.indexOf(item) >= 0);
         });
 		
 		// update visible count
-		self.visibleCountDOM.text(visibleProducts.length);
+		self.visibleCountDOM.text(visibleItems.length);
     };
 
     // INITIALIZATION
@@ -67,7 +67,7 @@ var FiltenVM = function(filtenCriteriaOptions) {
 	var criteriaMap = {};
 
     $('.filten-item').each(function (i, v) {
-        var item = new ProductModel(v);
+        var item = new ItemModel(v);
         self.items.push(item);
 		
         $.each(item.criteria, function (criterionKey, rawValue) {
@@ -75,7 +75,7 @@ var FiltenVM = function(filtenCriteriaOptions) {
 			if(!criteriaMap[criterionKey])
 				criteriaMap[criterionKey] = new CriterionModel(criterionKey, options[criterionKey.toLowerCase()], self.valueSelectionCB);
 			// parse the item's rawValue for this criterion
-			criteriaMap[criterionKey].parseProduct(item, rawValue);
+			criteriaMap[criterionKey].parseItem(item, rawValue);
         });
     });
 	
@@ -118,7 +118,7 @@ var CriterionModel = function (criterionName, options, valueSelectionCB) {
 		self.options.criteriaSortOrder = 999;
 	self.options.displayName = self.options.displayName || criterionName;
 	
-	self.parseProduct = function(item, rawValue) {
+	self.parseItem = function(item, rawValue) {
 		var values = [];
 		// if delimeter option is given, split each value into multiple values with the delimeter
 		if(self.options.delimeter)
@@ -142,7 +142,7 @@ var CriterionModel = function (criterionName, options, valueSelectionCB) {
 			if(typeof value != 'string' || value.length > 0) {
 				if(!self.valueMap[value]) 
 					self.valueMap[value] = new CriterionValueModel(value, self.valueSelectionCB, self.options.preProcess);
-				self.valueMap[value].addProduct(item);
+				self.valueMap[value].addItem(item);
 			}
 		}
 	};
@@ -184,7 +184,7 @@ var CriterionModel = function (criterionName, options, valueSelectionCB) {
 						if(value > rangeValueModel.range.lower && value <= rangeValueModel.range.upper) {
 							// add the singular value's items to the current range value
 							for(var j=-1; ++j<self.valueMap[value].items.length;)
-								rangeValueModel.addProduct(self.valueMap[value].items[j]);
+								rangeValueModel.addItem(self.valueMap[value].items[j]);
 								
 							// remove this singular value since we've found it's match
 							singularValues.splice(len,1);
@@ -214,7 +214,7 @@ var CriterionValueModel = function (valueName, valueSelectionCB) {
     self.items = [];
     self.active = ko.observable(false);
 
-    self.addProduct = function(item) {
+    self.addItem = function(item) {
 		if(self.items.indexOf(item) < 0)
 			self.items.push(item);
     };
@@ -230,7 +230,7 @@ var CriterionValueModel = function (valueName, valueSelectionCB) {
     self.active.subscribe(valueSelectionCB);
 };
 
-var ProductModel = function (itemDOM) {
+var ItemModel = function (itemDOM) {
     var self = this;
 
     var $item = $(itemDOM);
@@ -249,15 +249,12 @@ var ProductModel = function (itemDOM) {
 	};
 };
 
-var target = document.getElementById('filten');
-
 $('.filten').each(function(){
 	var $filten = $(this);
 	$filten.addClass("filten-wrapper");
-	$filten.append('<div class="filten-header"><div class="filten-title">Filter Results</div><div class="filten-summary"><div class="filten-summary-counts">showing <span class="filten-visible-count"></span> of <span class="filten-item-count"></span></div></div></div><div class="filten-container" data-bind="foreach: criteria"><div class="filten-crit"><div class="filten-crit-header" data-bind="text: options.displayName"></div><!-- ko foreach: values --><div class="filten-crit-value" data-bind="css: {\'filten-active\': active}, click: toggleActive"><div class="filten-crit-value-checkbox"></div><span data-bind="text: name"></span> <span class="filten-crit-value-count">(<span data-bind="text: itemCount()"></span>)</span></div><!-- /ko --></div></div><div class="filten-footer"><div class="filten-brand">Filtered by <a href="#">FiltEn</a></div></div>');
+	$filten.append('<div class="filten-header"><div class="filten-title">Filter Results</div><div class="filten-summary"><div class="filten-summary-counts">showing <span class="filten-visible-count"></span> of <span class="filten-item-count"></span></div></div></div><div class="filten-container" data-bind="foreach: criteria"><div class="filten-crit"><div class="filten-crit-header" data-bind="text: options.displayName"></div><!-- ko foreach: values --><div class="filten-crit-value" data-bind="css: {\'filten-active\': active}, click: toggleActive"><div class="filten-crit-value-checkbox"></div><span data-bind="text: name"></span> <span class="filten-crit-value-count">(<span data-bind="text: itemCount()"></span>)</span></div><!-- /ko --></div></div><div class="filten-footer"><div class="filten-brand">Filtered by <a href="http://endeavor85.github.io/filten">FiltEn</a></div></div>');
 	ko.applyBindings(new FiltenVM(filtenCriteriaOptions), this);
 	$filten.show();
 });
-
 
 });
