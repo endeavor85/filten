@@ -36,9 +36,9 @@
 <h3>
 <a name="requirements" class="anchor" href="#requirements"><span class="octicon octicon-link"></span></a>Requirements</h3>
 
-<p>Since the script scans all the results on the page, pagination must be disabled.  Otherwise the filters would only reflect the items on the current page of the pager and would not be a correct reflection of the products.</p>
+<p>Since the script scans all the results on the page, pagination must be disabled.  Otherwise the filters would only reflect the items on the current page of the pager and would not be a correct reflection of the items.</p>
 
-<p>Since the script hides filtered results, results should be laid out in a responsive manner.  Tabular layouts do not work well because each product is “locked” into its original row and column.  As products are hidden, the remaining products do not shift to fill in the gaps.  A responsive layout is more conducive to this approach because it can react to changes in product visibility due to filtering.</p>
+<p>Since the script hides filtered results, results should be laid out in a responsive manner.  Tabular layouts do not work well because each item is “locked” into its original row and column.  As items are hidden, the remaining items do not shift to fill in the gaps.  A responsive layout is more conducive to this approach because it can react to changes in item visibility due to filtering.</p>
 
 <h3>
 <a name="dependencies" class="anchor" href="#dependencies"><span class="octicon octicon-link"></span></a>Dependencies</h3>
@@ -73,23 +73,23 @@ FiltEn requires the following javascript libraries:
 
 <h4>Result Page HTML</h4>
 
-<p>Insert the following HTML into the product search result page:</p>
+<p>Insert the following HTML into the item search result page:</p>
 
 <pre><code>&lt;div class="filten"&gt;&lt;/div&gt;
 </code></pre>
 
-<h4>Product Metadata</h4>
+<h4>Item Metadata</h4>
 
-<p>Add the class “filten-product” to each product’s containing HTML element.  In the same element, add the following attributes to specify search criteria values for the product:</p>
+<p>Add the class “filten-item” to each item's containing HTML element.  In the same element, add the following attributes to specify search criteria values for the item:</p>
 
-<code>data-filten-crit-CRITERIA=”VALUE”</code>
+<code>data-filten-CRITERIA=”VALUE”</code>
 
-<p>Replace <code>CRITERIA</code> with the criteria name and <code>VALUE</code> with the product's value for that criteria.  You may have as many of these as you require.  Not all products have to have every criteria, so it’s ok to omit the attribute for those products.  Use the <code>preProcess</code> option to sanitize value prior to using them as search criteria.  <code>&lt;!-- HTML comments --&gt;</code> and trailing/leading whitespaces are automatically removed from string values.</p>
+<p>Replace <code>CRITERIA</code> with the criteria name and <code>VALUE</code> with the item's value for that criteria.  You may have as many of these as you require.  Not all items have to have every criteria, so it’s ok to omit the attribute for those items.  Use the <code>preProcess</code> option to sanitize value prior to using them as search criteria.  <code>&lt;!-- HTML comments --&gt;</code> and trailing/leading whitespaces are automatically removed from string values.</p>
 
 <h3>
 <a name="advanced-options" class="anchor" href="#advanced-options"><span class="octicon octicon-link"></span></a>Advanced Options</h3>
 
-<p>Some criteria may require more than just a name/value pair to achieve the desired effect.  To specify additional options for specific criteria, create a javascript variable named ‘filtenCriteriaOptions’ within <code>&lt;script&gt;</code> tags in the search results template.  The variable must be an <a href="http://www.quirksmode.org/js/associative.html">associative array</a> whose keys correspond to the names (lowercase) of the criteria found in the product metadata.  The value for each criteria name key is another object containing any of the following available options:</p>
+<p>Some criteria may require more than just a name/value pair to achieve the desired effect.  To specify additional options for specific criteria, create a javascript variable named ‘filtenCriteriaOptions’ within <code>&lt;script&gt;</code> tags in the search results template.  The variable must be an <a href="http://www.quirksmode.org/js/associative.html">associative array</a> whose keys correspond to the names (lowercase) of the criteria found in the item metadata.  The value for each criteria name key is another object containing any of the following available options:</p>
 
 <pre><code>&lt;script language="javascript" type="text/javascript"&gt;
   var filtenCriteriaOptions = {
