@@ -73,27 +73,7 @@ FiltEn requires the following javascript libraries:
 
 <p>Insert the following HTML into the product search result page:</p>
 
-<pre><code>&lt;div id='filten' class="filten-wrapper"&gt;
-    &lt;script language="javascript" type="text/javascript"&gt;
-        var filtenCriteriaOptions = {
-            // specify additional criteria options here
-        };
-    &lt;/script&gt;
-    &lt;div class="filten-header"&gt;
-        &lt;div class="filten-title"&gt;Filter Results&lt;/div&gt;
-        &lt;div class="filten-summary"&gt;
-            &lt;div class="filten-summary-counts"&gt;showing &lt;span data-bind="text: visibleCount"&gt;&lt;/span&gt; of &lt;span data-bind="text: products.length"&gt;&lt;/span&gt;&lt;/div&gt;
-        &lt;/div&gt;
-    &lt;/div&gt;
-    &lt;div class='filten-crit-container' data-bind="foreach: criteria"&gt;
-        &lt;div class='filten-crit'&gt;
-            &lt;div class='filten-crit-header' data-bind="text: options.displayName"&gt;&lt;/div&gt;
-            &lt;!-- ko foreach: values --&gt;
-            &lt;div class='filten-crit-value' data-bind="css: {'filten-active': active}, click: toggleActive"&gt;&lt;input class="filten-crit-value-checkbox" type="checkbox" data-bind="checked: active" /&gt;&lt;span data-bind="text: name"&gt;&lt;/span&gt; &lt;span class="filten-crit-value-count"&gt;(&lt;span data-bind="text: count(), attr: {'data-visible-count': countVisible()}"&gt;&lt;/span&gt;)&lt;/span&gt;&lt;/div&gt;
-            &lt;!-- /ko --&gt;
-        &lt;/div&gt;
-    &lt;/div&gt;
-&lt;/div&gt;
+<pre><code>&lt;div class="filten"&gt;&lt;/div&gt;
 </code></pre>
 
 <h4>Product Metadata</h4>
@@ -108,6 +88,13 @@ FiltEn requires the following javascript libraries:
 <a name="advanced-options" class="anchor" href="#advanced-options"><span class="octicon octicon-link"></span></a>Advanced Options</h3>
 
 <p>Some criteria may require more than just a name/value pair to achieve the desired effect.  To specify additional options for specific criteria, create a javascript variable named ‘filtenCriteriaOptions’ within <code>&lt;script&gt;</code> tags in the search results template.  The variable must be an <a href="http://www.quirksmode.org/js/associative.html">associative array</a> whose keys correspond to the names (lowercase) of the criteria found in the product metadata.  The value for each criteria name key is another object containing any of the following available options:</p>
+
+<pre><code>&lt;script language="javascript" type="text/javascript"&gt;
+  var filtenCriteriaOptions = {
+    // specify additional criteria options here
+  };
+&lt;/script&gt;
+</code></pre>
 
 <ul>
 <li><code>displayName</code> : string</li>
