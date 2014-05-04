@@ -136,6 +136,12 @@ FiltEn requires the following javascript libraries:
 
 <p>If your data loads asynchronously, you will need to defer filten's search until the results have loaded.  Just call <code>filten.refresh()</code> and filten will parse the results and refersh the search filter menu.</p>
 
+<p>If you need multiple filten search filter menus with different item sets, add the <code>data-item-selector</code> attribute to each filten <code>&lt;div&gt;</code> and specify the item selectors individually.</p>
+
+<pre><code>&lt;div class="filten" data-item-selector=".item.onsale"&gt;&lt;/div&gt;
+&lt;div class="filten" data-item-selector=".results > .instock"&gt;&lt;/div&gt;
+</code></pre>
+
 <h3>
 <a name="styles" class="anchor" href="#styles"><span class="octicon octicon-link"></span></a>Styles</h3>
 
